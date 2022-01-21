@@ -76,6 +76,10 @@ func ln{range_check_ptr}(x) -> (y):
         ids.y = value if value > 0 else (PRIME - value)
     %}
 
+    let const exp_test = exp(y)
+
+    assert y = exp_test
+
     assert 
     if is_positive == 0:
         return (-y)
