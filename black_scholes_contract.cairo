@@ -12,9 +12,6 @@ from starkware.cairo.common.serialize import serialize_word
 # extra factor introduced by multiplication.
 const UNIT = 10 ** 27
 
-# All inputs/outputs of this library are in 18-digit (Eth standard) precision.
-const ETH_UNIT = 10 ** 18
-
 # sqrt(2*pi) in terms of UNIT.
 const SQRT_TWOPI = 2506628274631000543434113024
 
