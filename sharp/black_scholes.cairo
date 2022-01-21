@@ -269,19 +269,19 @@ end
 func main(output_ptr : felt*, range_check_ptr) -> (output_ptr : felt*, range_check_ptr):
     alloc_locals
 
-	local t_annualised
-	local volatility
-	local spot
-	local strike
-	local rate
-	%{
+    local t_annualised
+    local volatility
+    local spot
+    local strike
+    local rate
+    %{
         ids.t_annualised = program_input['t_annualised']
         ids.volatility = program_input['volatility']
         ids.spot = program_input['spot']
         ids.strike = program_input['strike']
         ids.rate = program_input['rate']
     %}
-	with range_check_ptr:
+    with range_check_ptr:
         let (call_price, _) = option_prices(
             t_annualised, volatility, spot, strike, rate)
     end
