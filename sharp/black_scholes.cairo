@@ -286,5 +286,5 @@ func main(output_ptr : felt*, range_check_ptr) -> (output_ptr : felt*, range_che
             t_annualised, volatility, spot, strike, rate)
     end
     assert [output_ptr] = call_price
-	return (output_ptr=output_ptr + 1, range_check_ptr=range_check_ptr)
+    return (output_ptr=output_ptr + 1, range_check_ptr=range_check_ptr)
 end
