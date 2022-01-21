@@ -220,7 +220,7 @@ end
 # Returns the internal Black-Scholes coefficients.
 func d1d2{range_check_ptr}(
     tAnnualised, volatility, spot, strike, rate) -> (d1, d2):
-	alloc_locals
+    alloc_locals
 
     let (res_tAnnualised) = is_le(tAnnualised, MIN_T_ANNUALISED - 1)
     if res_tAnnualised == 1:
