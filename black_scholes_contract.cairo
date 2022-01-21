@@ -2,9 +2,12 @@
 
 %builtins range_check
 
+
 from starkware.cairo.common.math import abs_value, assert_nn, assert_le, unsigned_div_rem, signed_div_rem, assert_in_range
-from starkware.cairo.common.math_cmp import is_le, is_in_range
+from starkware.cairo.common.math_cmp import is_le, is_in_range, is_le_felt
 from starkware.cairo.common.serialize import serialize_word
+from starkware.cairo.common.pow import pow
+
 
 # This library uses fixed-point arithmetic with 27-digit precision for accurate
 # internal calculations. Extra care must be taken when multiplying/dividing.
@@ -14,7 +17,9 @@ const UNIT = 10 ** 27
 
 # sqrt(2*pi) in terms of UNIT.
 const SQRT_TWOPI = 2506628274631000543434113024
-
+# const LN_2_PRECISE = 693147180559945309417232122
+const LOG2_E = 1442695040888963407359924681
+const EULER = 2718281828459045235360287471
 # Boundaries on the input to std_normal_cdf. This helps overflow and out of
 # range errors in internal calculations (like exp()). The "real" values of
 # cdf(-5) and cdf(5) are very close to 0 and 1, respectively.
@@ -31,14 +36,28 @@ func exp{range_check_ptr}(x) -> (y):
 
     # Use python hint to compute exp.
     local y
+    
+    #Note that xlog2e is very large atm (order or 10^54 + order of x)
+    tempvar xlog2e = LOG2_E * x
     %{
         import math
         from starkware.cairo.common.math_utils import as_int
         value = as_int(ids.x, PRIME)
         ids.y = math.floor(ids.UNIT * math.exp((1.0 * value) / ids.UNIT))
+        ids.xlog2e = math.floor(ids.LOG2_E*1e-27 * ids.x)
     %}
 
-    # TODO: Validate hint
+    #First we assert that xlog2ee is actually the floor of x * ln(2)
+    let const (check1) = is_le_felt(xlog2e*UNIT, x*LOG2_E)
+    let const (check2) = is_le_felt(x*LOG2_E, (xlog2e+1)*UNIT)
+    assert check1 + check2 = 2
+
+    let const exp_test = pow(2, xlog2e)
+    let const check3 = is_le_felt(exp_test, y)
+    let const check4 = is_le_felt(y, exp_test*2)
+    assert check3 + check 4 = 2
+    #First calculate floor[x*ln2] and ceil x([ln2e])
+
 
     return (y)
 end
@@ -58,7 +77,10 @@ func ln{range_check_ptr}(x) -> (y):
         ids.y = value if value > 0 else (PRIME - value)
     %}
 
-    # TODO: Validate hint
+
+    let const exp_test = exp(y)
+
+    assert y = exp_test
 
     if is_positive == 0:
         return (-y)
