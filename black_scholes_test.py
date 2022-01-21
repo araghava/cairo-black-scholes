@@ -21,6 +21,7 @@ def get_precise(value):
 
 # Checks accuracy of the result.
 def check_result(got, expected):
+  print(got, expected)
   assert(abs(got - expected) < 0.001)
 
 # Returns a random tuple of (t_annualised, volatility, spot, strike, rate)
