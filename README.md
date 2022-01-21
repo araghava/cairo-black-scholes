@@ -31,3 +31,15 @@ one](https://goodcalculators.com/black-scholes-calculator/).
    [here](https://www.cairo-lang.org/docs/hello_starknet/unit_tests.html)).
 2. Install py\_vollib: ```pip install py_vollib```.
 3. Clone this repo and run ```pytest black_scholes_test.py```.
+
+## SHARP
+
+You can send a proof to the Shared Prover (SHARP) and check that the computation
+was verified on-chain by navigating to the sharp/ directory and running:
+
+```cairo-sharp submit --source black_scholes.cairo --program_input input.json```
+```cairo-sharp status {JOB_KEY}```
+
+When the status is "PROCESSED", you can check to see if it is verified on chain.
+
+```cairo-sharp is_verified {FACT} --node_url https://goerli-light.eth.linkpool.io/```
