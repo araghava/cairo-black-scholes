@@ -35,9 +35,10 @@ one](https://goodcalculators.com/black-scholes-calculator/).
 ## SHARP
 
 You can send a proof to the Shared Prover (SHARP) and check that the computation
-was verified on-chain by navigating to the sharp/ directory and running:
+is verified on-chain by navigating to the sharp/ directory and running:
 
 ```cairo-sharp submit --source black_scholes.cairo --program_input input.json```
+
 ```cairo-sharp status {JOB_KEY}```
 
 When the status is "PROCESSED", you can check to see if it is verified on chain.
