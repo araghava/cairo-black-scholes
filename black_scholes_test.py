@@ -4,7 +4,6 @@ import random
 import pytest
 
 from py_vollib.black_scholes import black_scholes
-from py_vollib.black_scholes.greeks.analytical import delta
 
 from starkware.starknet.compiler.compile import compile_starknet_files
 from starkware.starknet.testing.starknet import Starknet
@@ -19,8 +18,8 @@ UNIT = 1e27
 def get_precise(value):
     return int(UNIT * value)
 
-# Checks accuracy of the result.
-def check_result(got, expected):
+# Checks accuracy of the option price (within $0.001).
+def check_price(got, expected):
   print(got, expected)
   assert(abs(got - expected) < 0.001)
 
@@ -82,5 +81,5 @@ async def test_randomized_black_scholes_options_prices():
                         test_inputs[i][0], test_inputs[i][4],
                         test_inputs[i][1]))
 
-      check_result(got_call, exp_call)
-      check_result(got_put, exp_put)
+      check_price(got_call, exp_call)
+      check_price(got_put, exp_put)
