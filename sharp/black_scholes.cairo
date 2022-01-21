@@ -1,6 +1,6 @@
 %builtins output range_check
 
-from starkware.cairo.common.math import abs_value, assert_nn, assert_le, unsigned_div_rem, signed_div_rem
+from starkware.cairo.common.math import abs_value, assert_nn, assert_le, unsigned_div_rem, signed_div_rem, assert_in_range
 from starkware.cairo.common.math_cmp import is_le, is_in_range
 from starkware.cairo.common.serialize import serialize_word
 
@@ -37,6 +37,9 @@ func exp{range_check_ptr}(x) -> (y):
         value = as_int(ids.x, PRIME)
         ids.y = math.floor(ids.UNIT * math.exp((1.0 * value) / ids.UNIT))
     %}
+
+    # TODO: Validate hint
+
     return (y)
 end
 
@@ -51,11 +54,12 @@ func ln{range_check_ptr}(x) -> (y):
         import math
         value = math.floor(ids.UNIT * math.log(1.0 * ids.x / ids.UNIT))
 
-        # Return value of log can be positive or negative. We can only assign
-        # non-negative Cairo memory values, so convert later.
         ids.is_positive = value > 0
         ids.y = value if value > 0 else (PRIME - value)
     %}
+
+    # TODO: Validate hint
+
     if is_positive == 0:
         return (-y)
     else:
@@ -70,8 +74,12 @@ func sqrt{range_check_ptr}(x) -> (y):
     local y
     %{
         import math
-        ids.y = math.floor(math.sqrt(ids.x))
+        ids.y = math.isqrt(ids.x)
     %}
+
+    # Validate hint.
+    let upper = y + 1
+    assert_in_range(x, y * y, upper * upper)
 
     return (y)
 end
