@@ -1,6 +1,7 @@
 # Cairo Black-Scholes Library
 
 Black-Scholes library implemented as a Cairo smart contract.
+
 All inputs, outputs, and internal calculations use 27-digit fixed-point numbers.
 
 ## Validation
@@ -16,7 +17,7 @@ that the error from the Cairo library and the py\_vollib libary is minimal.
 
 ## Test Instructions
 
-1. First install all dependencies needed to run a basic StarkNet contract unit
-test (see here).
+1. First make sure you can run a basic StarkNet contract unit test (see
+   [here](https://www.cairo-lang.org/docs/hello_starknet/unit_tests.html)).
 2. Install py\_vollib: ```pip install py_vollib```.
 3. Clone this repo and run ```pytest black_scholes_test.py```.
