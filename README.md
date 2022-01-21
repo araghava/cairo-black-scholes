@@ -4,6 +4,14 @@ Black-Scholes library implemented as a Cairo smart contract.
 
 All inputs, outputs, and internal calculations use 27-digit fixed-point numbers.
 
+## Library
+
+This library implements the interface described
+[here](https://blog.lyra.finance/cairo-developer-grant/). The external functions
+exposed allow you to retrieve the Black-Scholes call and put option prices and
+the option greeks, given the expiration time, volatility, spot price,
+strike price, and interest rate.
+
 ## Validation
 
 The pytest deploys the smart contract in a local test environment and queries
