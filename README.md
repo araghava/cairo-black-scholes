@@ -34,8 +34,9 @@ one](https://goodcalculators.com/black-scholes-calculator/).
 
 ## SHARP
 
-You can generate a validity proof using the Shared Prover (SHARP) and check that
-it gets verified on-chain by navigating to the sharp/ directory and running:
+In the sharp/ folder, you can generate a proof of call option price computation
+for a given input (```input.json```) using the Shared Prover (SHARP) and check
+that the proof gets verified on-chain by running:
 
 ```cairo-sharp submit --source black_scholes.cairo --program_input input.json```
 
