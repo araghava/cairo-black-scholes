@@ -45,3 +45,30 @@ that the proof gets verified on-chain by running:
 When the status is "PROCESSED", you can check to see if it is verified on chain.
 
 ```cairo-sharp is_verified {FACT} --node_url https://goerli-light.eth.linkpool.io/```
+
+## Example Results
+
+These are the inputs in ```sharp/input.json```. Note that the input file
+represents these values as 27-digit fixed-point numbers.
+```
+t_annualised = 1 year
+volatility = 15%
+spot = $300
+strike = $250
+rate = 3%
+```
+
+Run the following command in the sharp/ directory:
+```
+cairo-compile black_scholes.cairo --output black_scholes_compiled.json && \
+    cairo-run --program=black_scholes_compiled.json --print_output \
+    --layout=small --program_input=input.json
+```
+
+The output returns the call option price of $58.82 (divide it by 10^27).
+For put option price and greek values, please modify 'main' in
+black_scholes.cairo accordingly.
+```
+Program output:
+  58819767434065242445077191149
+```

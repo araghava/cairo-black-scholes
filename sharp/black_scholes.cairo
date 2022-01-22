@@ -359,7 +359,7 @@ func main(output_ptr : felt*, range_check_ptr) -> (output_ptr : felt*, range_che
         ids.rate = program_input['rate']
     %}
     with range_check_ptr:
-        let (call_price, _) = option_prices(
+        let (call_price, put_price) = option_prices(
             t_annualised, volatility, spot, strike, rate)
     end
     assert [output_ptr] = call_price

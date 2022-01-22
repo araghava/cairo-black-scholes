@@ -30,9 +30,9 @@ def get_random_test_input():
     # Random volatility from 0.01% to 50%.
     volatility = random.uniform(0.0001, 0.5)
     # Random spot price between $0.01 and $1000
-    spot = random.uniform(0.01, 10000)
+    spot = random.uniform(0.01, 1000)
     # Random strike price between $0.01 and $1000
-    strike = random.uniform(0.01, 10000)
+    strike = random.uniform(0.01, 1000)
     # Random interest rate between 0.01% and 50%
     rate = random.uniform(0.0001, 0.5)
     return (t_annualised, volatility, spot, strike, rate)
