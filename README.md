@@ -25,7 +25,7 @@ that the error from the Cairo library and the py\_vollib libary is minimal.
 Option greeks were validated against online tools such as [this
 one](https://goodcalculators.com/black-scholes-calculator/).
 
-## Test Instructions
+### Test Instructions
 
 1. First make sure you can run a basic StarkNet contract unit test (see
    [here](https://www.cairo-lang.org/docs/hello_starknet/unit_tests.html)).
