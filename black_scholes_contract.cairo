@@ -25,6 +25,24 @@ const MAX_CDF_INPUT = 5 * UNIT
 const MIN_T_ANNUALISED = 31709791983764586496
 const MIN_VOLATILITY = UNIT / 10000
 
+# Returns y, the floored square root of x.
+# TODO: Remove this and use Cairo's built-in sqrt library once v0.7.0 is out.
+func sqrt{range_check_ptr}(x) -> (y):
+    alloc_locals
+
+    local y
+    %{
+        import math
+        ids.y = math.isqrt(ids.x)
+    %}
+
+    # Validate hint (x = y * y)
+    tempvar y_plus_one = y + 1
+    assert_in_range(x, y * y, y_plus_one * y_plus_one)
+
+    return (y)
+end
+
 # Returns y, the exponent of x. Uses first 50 terms of series expansion.
 func exp{range_check_ptr}(x) -> (y):
     alloc_locals
@@ -128,24 +146,6 @@ func ln{range_check_ptr}(x) -> (y):
         assert_in_range(x, exp_y - ERROR_DIV, exp_y + ERROR_DIV)
         return (abs_y)
     end
-end
-
-# Returns y, the floored square root of x.
-# TODO: Remove this and use Cairo's built-in sqrt library once v0.7.0 is out.
-func sqrt{range_check_ptr}(x) -> (y):
-    alloc_locals
-
-    local y
-    %{
-        import math
-        ids.y = math.isqrt(ids.x)
-    %}
-
-    # Validate hint (x = y * y)
-    tempvar y_plus_one = y + 1
-    assert_in_range(x, y * y, y_plus_one * y_plus_one)
-
-    return (y)
 end
 
 # Returns y, standard normal distribution at x.
