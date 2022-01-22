@@ -25,7 +25,7 @@ const MAX_CDF_INPUT = 5 * UNIT
 const MIN_T_ANNUALISED = 31709791983764586496
 const MIN_VOLATILITY = UNIT / 10000
 
-# Returns y, the exponent of x. Uses first 40 terms of series expansion.
+# Returns y, the exponent of x. Uses first 50 terms of series expansion.
 func exp{range_check_ptr}(x) -> (y):
     alloc_locals
 
@@ -72,11 +72,22 @@ func exp{range_check_ptr}(x) -> (y):
     let (local t38, _) = signed_div_rem(t37*x, 38*UNIT, 10**10 * UNIT)
     let (local t39, _) = signed_div_rem(t38*x, 39*UNIT, 10**10 * UNIT)
     let (local t40, _) = signed_div_rem(t39*x, 40*UNIT, 10**10 * UNIT)
+    let (local t41, _) = signed_div_rem(t40*x, 41*UNIT, 10**10 * UNIT)
+    let (local t42, _) = signed_div_rem(t41*x, 42*UNIT, 10**10 * UNIT)
+    let (local t43, _) = signed_div_rem(t42*x, 43*UNIT, 10**10 * UNIT)
+    let (local t44, _) = signed_div_rem(t43*x, 44*UNIT, 10**10 * UNIT)
+    let (local t45, _) = signed_div_rem(t44*x, 45*UNIT, 10**10 * UNIT)
+    let (local t46, _) = signed_div_rem(t45*x, 46*UNIT, 10**10 * UNIT)
+    let (local t47, _) = signed_div_rem(t46*x, 47*UNIT, 10**10 * UNIT)
+    let (local t48, _) = signed_div_rem(t47*x, 48*UNIT, 10**10 * UNIT)
+    let (local t49, _) = signed_div_rem(t48*x, 49*UNIT, 10**10 * UNIT)
+    let (local t50, _) = signed_div_rem(t49*x, 50*UNIT, 10**10 * UNIT)
 
     let sum = (UNIT + x + t2 + t3 + t4 + t5 + t6 + t7 + t8 + t9 + t10 + t11 +
                t12 + t13 + t14 + t15 + t16 + t17 + t18 + t19 + t20 + t21 + t22 +
                t23 + t24 + t25 + t26 + t27 + t28 + t29 + t30 + t31 + t32 + t33 +
-               t34 + t35 + t36 + t37 + t38 + t39 + t40)
+               t34 + t35 + t36 + t37 + t38 + t39 + t40 + t41 + t42 + t43 + t44 +
+               t45 + t46 + t47 + t48 + t49 + t50)
 
     return (y=sum)
 end
