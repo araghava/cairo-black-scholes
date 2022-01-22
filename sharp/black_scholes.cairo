@@ -24,6 +24,7 @@ const MAX_CDF_INPUT = 5 * UNIT
 # Minimum values to avoid divide-by-zero (one second and 0.001%, respectively).
 const MIN_T_ANNUALISED = 31709791983764586496
 const MIN_VOLATILITY = UNIT / 10000
+const DIV_BOUND = (2 ** 128) / 2
 
 # Returns y, the floored square root of x.
 # TODO: Remove this and use Cairo's built-in sqrt library once v0.7.0 is out.
@@ -36,6 +37,7 @@ func sqrt{range_check_ptr}(x) -> (y):
         ids.y = math.isqrt(ids.x)
     %}
 
+    # Verify hint.
     assert_nn(y)
     tempvar y_plus_one = y + 1
     assert_in_range(x, y * y, y_plus_one * y_plus_one)
@@ -43,8 +45,8 @@ func sqrt{range_check_ptr}(x) -> (y):
     return (y)
 end
 
-# Returns y, standard normal distribution at x.
-# Returns y, the exponent of x. Uses first 50 terms of series expansion.
+# Returns y, the exponent of x.
+# Uses first 50 terms of taylor series expansion centered at 0.
 func exp{range_check_ptr}(x) -> (y):
     alloc_locals
 
@@ -52,55 +54,55 @@ func exp{range_check_ptr}(x) -> (y):
         return (y=1)
     end
 
-    let (local t2, _) = signed_div_rem(x*x, 2*UNIT, 10**10 * UNIT)
-    let (local t3, _) = signed_div_rem(t2*x, 3*UNIT, 10**10 * UNIT)
-    let (local t4, _) = signed_div_rem(t3*x, 4*UNIT, 10**10 * UNIT)
-    let (local t5, _) = signed_div_rem(t4*x, 5*UNIT, 10**10 * UNIT)
-    let (local t6, _) = signed_div_rem(t5*x, 6*UNIT, 10**10 * UNIT)
-    let (local t7, _) = signed_div_rem(t6*x, 7*UNIT, 10**10 * UNIT)
-    let (local t8, _) = signed_div_rem(t7*x, 8*UNIT, 10**10 * UNIT)
-    let (local t9, _) = signed_div_rem(t8*x, 9*UNIT, 10**10 * UNIT)
-    let (local t10, _) = signed_div_rem(t9*x, 10*UNIT, 10**10 * UNIT)
-    let (local t11, _) = signed_div_rem(t10*x, 11*UNIT, 10**10 * UNIT)
-    let (local t12, _) = signed_div_rem(t11*x, 12*UNIT, 10**10 * UNIT)
-    let (local t13, _) = signed_div_rem(t12*x, 13*UNIT, 10**10 * UNIT)
-    let (local t14, _) = signed_div_rem(t13*x, 14*UNIT, 10**10 * UNIT)
-    let (local t15, _) = signed_div_rem(t14*x, 15*UNIT, 10**10 * UNIT)
-    let (local t16, _) = signed_div_rem(t15*x, 16*UNIT, 10**10 * UNIT)
-    let (local t17, _) = signed_div_rem(t16*x, 17*UNIT, 10**10 * UNIT)
-    let (local t18, _) = signed_div_rem(t17*x, 18*UNIT, 10**10 * UNIT)
-    let (local t19, _) = signed_div_rem(t18*x, 19*UNIT, 10**10 * UNIT)
-    let (local t20, _) = signed_div_rem(t19*x, 20*UNIT, 10**10 * UNIT)
-    let (local t21, _) = signed_div_rem(t20*x, 21*UNIT, 10**10 * UNIT)
-    let (local t22, _) = signed_div_rem(t21*x, 22*UNIT, 10**10 * UNIT)
-    let (local t23, _) = signed_div_rem(t22*x, 23*UNIT, 10**10 * UNIT)
-    let (local t24, _) = signed_div_rem(t23*x, 24*UNIT, 10**10 * UNIT)
-    let (local t25, _) = signed_div_rem(t24*x, 25*UNIT, 10**10 * UNIT)
-    let (local t26, _) = signed_div_rem(t25*x, 26*UNIT, 10**10 * UNIT)
-    let (local t27, _) = signed_div_rem(t26*x, 27*UNIT, 10**10 * UNIT)
-    let (local t28, _) = signed_div_rem(t27*x, 28*UNIT, 10**10 * UNIT)
-    let (local t29, _) = signed_div_rem(t28*x, 29*UNIT, 10**10 * UNIT)
-    let (local t30, _) = signed_div_rem(t29*x, 30*UNIT, 10**10 * UNIT)
-    let (local t31, _) = signed_div_rem(t30*x, 31*UNIT, 10**10 * UNIT)
-    let (local t32, _) = signed_div_rem(t31*x, 32*UNIT, 10**10 * UNIT)
-    let (local t33, _) = signed_div_rem(t32*x, 33*UNIT, 10**10 * UNIT)
-    let (local t34, _) = signed_div_rem(t33*x, 34*UNIT, 10**10 * UNIT)
-    let (local t35, _) = signed_div_rem(t34*x, 35*UNIT, 10**10 * UNIT)
-    let (local t36, _) = signed_div_rem(t35*x, 36*UNIT, 10**10 * UNIT)
-    let (local t37, _) = signed_div_rem(t36*x, 37*UNIT, 10**10 * UNIT)
-    let (local t38, _) = signed_div_rem(t37*x, 38*UNIT, 10**10 * UNIT)
-    let (local t39, _) = signed_div_rem(t38*x, 39*UNIT, 10**10 * UNIT)
-    let (local t40, _) = signed_div_rem(t39*x, 40*UNIT, 10**10 * UNIT)
-    let (local t41, _) = signed_div_rem(t40*x, 41*UNIT, 10**10 * UNIT)
-    let (local t42, _) = signed_div_rem(t41*x, 42*UNIT, 10**10 * UNIT)
-    let (local t43, _) = signed_div_rem(t42*x, 43*UNIT, 10**10 * UNIT)
-    let (local t44, _) = signed_div_rem(t43*x, 44*UNIT, 10**10 * UNIT)
-    let (local t45, _) = signed_div_rem(t44*x, 45*UNIT, 10**10 * UNIT)
-    let (local t46, _) = signed_div_rem(t45*x, 46*UNIT, 10**10 * UNIT)
-    let (local t47, _) = signed_div_rem(t46*x, 47*UNIT, 10**10 * UNIT)
-    let (local t48, _) = signed_div_rem(t47*x, 48*UNIT, 10**10 * UNIT)
-    let (local t49, _) = signed_div_rem(t48*x, 49*UNIT, 10**10 * UNIT)
-    let (local t50, _) = signed_div_rem(t49*x, 50*UNIT, 10**10 * UNIT)
+    let (local t2, _) = signed_div_rem(x*x, 2*UNIT, DIV_BOUND)
+    let (local t3, _) = signed_div_rem(t2*x, 3*UNIT, DIV_BOUND)
+    let (local t4, _) = signed_div_rem(t3*x, 4*UNIT, DIV_BOUND)
+    let (local t5, _) = signed_div_rem(t4*x, 5*UNIT, DIV_BOUND)
+    let (local t6, _) = signed_div_rem(t5*x, 6*UNIT, DIV_BOUND)
+    let (local t7, _) = signed_div_rem(t6*x, 7*UNIT, DIV_BOUND)
+    let (local t8, _) = signed_div_rem(t7*x, 8*UNIT, DIV_BOUND)
+    let (local t9, _) = signed_div_rem(t8*x, 9*UNIT, DIV_BOUND)
+    let (local t10, _) = signed_div_rem(t9*x, 10*UNIT, DIV_BOUND)
+    let (local t11, _) = signed_div_rem(t10*x, 11*UNIT, DIV_BOUND)
+    let (local t12, _) = signed_div_rem(t11*x, 12*UNIT, DIV_BOUND)
+    let (local t13, _) = signed_div_rem(t12*x, 13*UNIT, DIV_BOUND)
+    let (local t14, _) = signed_div_rem(t13*x, 14*UNIT, DIV_BOUND)
+    let (local t15, _) = signed_div_rem(t14*x, 15*UNIT, DIV_BOUND)
+    let (local t16, _) = signed_div_rem(t15*x, 16*UNIT, DIV_BOUND)
+    let (local t17, _) = signed_div_rem(t16*x, 17*UNIT, DIV_BOUND)
+    let (local t18, _) = signed_div_rem(t17*x, 18*UNIT, DIV_BOUND)
+    let (local t19, _) = signed_div_rem(t18*x, 19*UNIT, DIV_BOUND)
+    let (local t20, _) = signed_div_rem(t19*x, 20*UNIT, DIV_BOUND)
+    let (local t21, _) = signed_div_rem(t20*x, 21*UNIT, DIV_BOUND)
+    let (local t22, _) = signed_div_rem(t21*x, 22*UNIT, DIV_BOUND)
+    let (local t23, _) = signed_div_rem(t22*x, 23*UNIT, DIV_BOUND)
+    let (local t24, _) = signed_div_rem(t23*x, 24*UNIT, DIV_BOUND)
+    let (local t25, _) = signed_div_rem(t24*x, 25*UNIT, DIV_BOUND)
+    let (local t26, _) = signed_div_rem(t25*x, 26*UNIT, DIV_BOUND)
+    let (local t27, _) = signed_div_rem(t26*x, 27*UNIT, DIV_BOUND)
+    let (local t28, _) = signed_div_rem(t27*x, 28*UNIT, DIV_BOUND)
+    let (local t29, _) = signed_div_rem(t28*x, 29*UNIT, DIV_BOUND)
+    let (local t30, _) = signed_div_rem(t29*x, 30*UNIT, DIV_BOUND)
+    let (local t31, _) = signed_div_rem(t30*x, 31*UNIT, DIV_BOUND)
+    let (local t32, _) = signed_div_rem(t31*x, 32*UNIT, DIV_BOUND)
+    let (local t33, _) = signed_div_rem(t32*x, 33*UNIT, DIV_BOUND)
+    let (local t34, _) = signed_div_rem(t33*x, 34*UNIT, DIV_BOUND)
+    let (local t35, _) = signed_div_rem(t34*x, 35*UNIT, DIV_BOUND)
+    let (local t36, _) = signed_div_rem(t35*x, 36*UNIT, DIV_BOUND)
+    let (local t37, _) = signed_div_rem(t36*x, 37*UNIT, DIV_BOUND)
+    let (local t38, _) = signed_div_rem(t37*x, 38*UNIT, DIV_BOUND)
+    let (local t39, _) = signed_div_rem(t38*x, 39*UNIT, DIV_BOUND)
+    let (local t40, _) = signed_div_rem(t39*x, 40*UNIT, DIV_BOUND)
+    let (local t41, _) = signed_div_rem(t40*x, 41*UNIT, DIV_BOUND)
+    let (local t42, _) = signed_div_rem(t41*x, 42*UNIT, DIV_BOUND)
+    let (local t43, _) = signed_div_rem(t42*x, 43*UNIT, DIV_BOUND)
+    let (local t44, _) = signed_div_rem(t43*x, 44*UNIT, DIV_BOUND)
+    let (local t45, _) = signed_div_rem(t44*x, 45*UNIT, DIV_BOUND)
+    let (local t46, _) = signed_div_rem(t45*x, 46*UNIT, DIV_BOUND)
+    let (local t47, _) = signed_div_rem(t46*x, 47*UNIT, DIV_BOUND)
+    let (local t48, _) = signed_div_rem(t47*x, 48*UNIT, DIV_BOUND)
+    let (local t49, _) = signed_div_rem(t48*x, 49*UNIT, DIV_BOUND)
+    let (local t50, _) = signed_div_rem(t49*x, 50*UNIT, DIV_BOUND)
 
     let sum = (UNIT + x + t2 + t3 + t4 + t5 + t6 + t7 + t8 + t9 + t10 + t11 +
                t12 + t13 + t14 + t15 + t16 + t17 + t18 + t19 + t20 + t21 + t22 +
@@ -112,6 +114,8 @@ func exp{range_check_ptr}(x) -> (y):
 end
 
 # Returns y, the natural logarithm of x.
+# TODO: Consider implementing this fully in Cairo by using binary search with
+# the above exp function.
 func ln{range_check_ptr}(x) -> (y):
     alloc_locals
 
@@ -119,7 +123,7 @@ func ln{range_check_ptr}(x) -> (y):
         return (y=0)
     end
 
-    # Use python hint to compute ln.
+    # Python hint computes absolute value of result and the sign.
     local abs_y
     local is_negative
     %{
@@ -130,25 +134,25 @@ func ln{range_check_ptr}(x) -> (y):
         ids.abs_y = value if not ids.is_negative else (PRIME - value)
     %}
 
-    # Verify hint computed correct is_negative value.
+    # Verify hint computed correct sign.
     let (local res) = is_le(x, UNIT - 1)
     assert res = is_negative
 
-    # Verify hint computed correct abs_y value with error margin of 1e-6.
-    # This is needed as the verification uses the above exp(x) approximation.
+    # Verify hint computed correct ln value to a certain degree of accuracy
+    # using the above exp approximation.
     const ERROR_DIV = UNIT / 10**6
     if res == 1:
         let (local exp_y) = exp(-abs_y)
         assert_in_range(x, exp_y - ERROR_DIV, exp_y + ERROR_DIV)
         return (-abs_y)
     else:
-        let (bias, _) = unsigned_div_rem(abs_y, 100)
         let (local exp_y) = exp(abs_y)
         assert_in_range(x, exp_y - ERROR_DIV, exp_y + ERROR_DIV)
         return (abs_y)
     end
 end
 
+# Returns y, standard normal distribution at x.
 # This computes e^(-x^2/2) / sqrt(2*pi).
 func std_normal{range_check_ptr}(x) -> (y):
     let (x_squared_over_two, _) = unsigned_div_rem(x * x, UNIT * 2)
@@ -158,7 +162,7 @@ func std_normal{range_check_ptr}(x) -> (y):
 end
 
 # Returns y, cumulative normal distribution at x.
-# Computed using a curve-fitting approximation (Hasting's).
+# Computed using a curve-fitting approximation.
 func std_normal_cdf{range_check_ptr}(x) -> (y):
     alloc_locals
 
@@ -191,11 +195,11 @@ func std_normal_cdf{range_check_ptr}(x) -> (y):
     let (exponent_term) = exp(x_squared_over_two)
 
     let (local b, _) = unsigned_div_rem(UNIT * c2, exponent_term)
-    let (local d1, _) = signed_div_rem(b5*MUL, t, UNIT)
-    let (local d2, _) = signed_div_rem((b4 + d1)*MUL, t, UNIT)
-    let (local d3, _) = signed_div_rem((b3 + d2)*MUL, t, UNIT)
-    let (local d4, _) = signed_div_rem((b2 + d3)*MUL, t, UNIT)
-    let (local d5, _) = signed_div_rem((b1 + d4)*MUL, t, UNIT)
+    let (local d1, _) = signed_div_rem(b5*MUL, t, DIV_BOUND)
+    let (local d2, _) = signed_div_rem((b4 + d1)*MUL, t, DIV_BOUND)
+    let (local d3, _) = signed_div_rem((b3 + d2)*MUL, t, DIV_BOUND)
+    let (local d4, _) = signed_div_rem((b2 + d3)*MUL, t, DIV_BOUND)
+    let (local d5, _) = signed_div_rem((b1 + d4)*MUL, t, DIV_BOUND)
     local prob = b * d5
 
     let (res) = is_le(x, 0)
@@ -213,11 +217,13 @@ func d1d2{range_check_ptr}(
     t_annualised, volatility, spot, strike, rate) -> (d1, d2):
     alloc_locals
 
+    # Case where t_annualised is too low.
     let (res_t_annualised) = is_le(t_annualised, MIN_T_ANNUALISED - 1)
     if res_t_annualised == 1:
         return d1d2(MIN_T_ANNUALISED, volatility, spot, strike, rate)
     end
 
+    # Case where volatility is too low.
     let (res_volatility) = is_le(volatility, MIN_VOLATILITY - 1)
     if res_volatility == 1:
         return d1d2(t_annualised, MIN_VOLATILITY, spot, strike, rate)
@@ -231,7 +237,7 @@ func d1d2{range_check_ptr}(
 
     local vol2_add = vol2 + rate
     let (local v2t, _) = unsigned_div_rem(vol2_add * t_annualised, UNIT)
-    let (local d1, _) = signed_div_rem(UNIT * (log + v2t), vt_sqrt, 10**10*UNIT)
+    let (local d1, _) = signed_div_rem(UNIT * (log + v2t), vt_sqrt, DIV_BOUND)
     let d2 = d1 - vt_sqrt
     return (d1, d2)
 end
@@ -313,15 +319,18 @@ func theta{range_check_ptr}(
     let (spot_vol, _) = unsigned_div_rem(spot * volatility, UNIT)
     let (local c4, _) = unsigned_div_rem(UNIT * spot_vol, 2 * sqrt_t)
     let (local c5, _) = unsigned_div_rem(std_norm_d1 * c4, UNIT)
+
     local call_theta_t = -c5 - c3
     local put_theta_t = -c5 + p3
-    let (local call_theta, _) = signed_div_rem(call_theta_t, 365, 10**10*UNIT)
-    let (local put_theta, _) = signed_div_rem(-c5 + p3, 365, 10**10*UNIT)
+
+    # Divide by 365 as thetas are per-day.
+    let (local call_theta, _) = signed_div_rem(call_theta_t, 365, DIV_BOUND)
+    let (local put_theta, _) = signed_div_rem(put_theta_t, 365, DIV_BOUND)
 
     return (call_theta, put_theta)
 end
 
-# Returns the internal Black-Scholes coefficients.
+# Returns the call and put options prices.
 func option_prices{range_check_ptr}(
     t_annualised, volatility, spot, strike, rate) -> (call_price, put_price):
     alloc_locals
