@@ -36,7 +36,7 @@ func sqrt{range_check_ptr}(x) -> (y):
         ids.y = math.isqrt(ids.x)
     %}
 
-    # Verify hint computed correct value.
+    assert_nn(y)
     tempvar y_plus_one = y + 1
     assert_in_range(x, y * y, y_plus_one * y_plus_one)
 
