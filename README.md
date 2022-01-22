@@ -31,7 +31,47 @@ one](https://goodcalculators.com/black-scholes-calculator/).
 1. First make sure you can run a basic StarkNet contract unit test (see
    [here](https://www.cairo-lang.org/docs/hello_starknet/unit_tests.html)).
 2. Install py\_vollib: ```pip install py_vollib```.
-3. Clone this repo and run ```pytest black_scholes_test.py```.
+3. Clone this repo and run ```pytest --capture=no black_scholes_test.py```.
+
+### Sample Test Output
+
+Example output from running the pytest:
+```
+Input 0:
+t_annualised: 1.80990 years
+volatility: 13.38042%
+spot price: $175.83945
+strike price: $210.77366
+interest rate: 26.10447%
+
+Result 0:
+Computed call price: $45.03733, Expected call price: $45.03732
+Computed put price: $0.60770, Expected put price: $0.60769
+
+Input 1:
+t_annualised: 2.42301 years
+volatility: 4.32787%
+spot price: $788.69543
+strike price: $209.41947
+interest rate: 38.54290%
+
+Result 1:
+Computed call price: $706.38983, Expected call price: $706.38983
+Computed put price: $0.00000, Expected put price: $0.00000
+
+Input 2:
+t_annualised: 1.22038 years
+volatility: 32.02755%
+spot price: $366.68875
+strike price: $513.10870
+interest rate: 28.01244%
+
+Result 2:
+Computed call price: $52.42110, Expected call price: $52.42097
+Computed put price: $50.27003, Expected put price: $50.26990
+
+...
+```
 
 ## SHARP
 

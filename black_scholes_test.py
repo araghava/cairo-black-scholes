@@ -20,7 +20,6 @@ def get_precise(value):
 
 # Checks accuracy of the option price (within $0.001).
 def check_price(got, expected):
-  print(got, expected)
   assert(abs(got - expected) < 0.001)
 
 # Returns a random tuple of (t_annualised, volatility, spot, strike, rate)
@@ -68,6 +67,7 @@ async def test_randomized_black_scholes_options_prices():
           rate=get_precise(test_input[4])).call())
 
     # Compare call and put prices with the python black scholes library.
+    print()
     execution_infos = await asyncio.gather(*tasks)
     for i, execution_info in enumerate(execution_infos):
       (got_call, got_put) = (execution_info.result.call_price/UNIT,
@@ -80,6 +80,20 @@ async def test_randomized_black_scholes_options_prices():
           black_scholes('p', test_inputs[i][2], test_inputs[i][3],
                         test_inputs[i][0], test_inputs[i][4],
                         test_inputs[i][1]))
+
+      print()
+      print('Input %d:' % i)
+      print('t_annualised: %.5f years' % test_inputs[i][0])
+      print('volatility: %.5f%%' % (100 * test_inputs[i][1]))
+      print('spot price: $%.5f' % test_inputs[i][2])
+      print('strike price: $%.5f' % test_inputs[i][3])
+      print('interest rate: %.5f%%' % (100 * test_inputs[i][4]))
+      print()
+      print('Result %d:' % i)
+      print('Computed call price: $%0.5f, Expected call price: $%0.5f' % (
+          got_call, exp_call))
+      print('Computed put price: $%0.5f, Expected put price: $%0.5f' % (
+          got_put, exp_put))
 
       check_price(got_call, exp_call)
       check_price(got_put, exp_put)
