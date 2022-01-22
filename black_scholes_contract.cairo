@@ -85,27 +85,42 @@ end
 func ln{range_check_ptr}(x) -> (y):
     alloc_locals
 
+    if x == 1:
+        return (y=0)
+    end
+
     # Use python hint to compute ln.
-    local y
-    local is_positive
+    local abs_y
+    local is_negative
     %{
         import math
         value = math.floor(ids.UNIT * math.log(1.0 * ids.x / ids.UNIT))
 
-        ids.is_positive = value > 0
-        ids.y = value if value > 0 else (PRIME - value)
+        ids.is_negative = value < 0
+        ids.abs_y = value if not ids.is_negative else (PRIME - value)
     %}
 
-    # TODO: Validate hint.
+    # Verify hint computed correct is_negative value.
+    let (local res) = is_le(x, UNIT - 1)
+    assert res = is_negative
 
-    if is_positive == 0:
-        return (-y)
+    # Verify hint computed correct abs_y value with error margin of 1e-6.
+    # This is needed as the verification uses the above exp(x) approximation.
+    const ERROR_DIV = UNIT / 10**6
+    if res == 1:
+        let (local exp_y) = exp(-abs_y)
+        assert_in_range(x, exp_y - ERROR_DIV, exp_y + ERROR_DIV)
+        return (-abs_y)
     else:
-        return (y)
+        let (bias, _) = unsigned_div_rem(abs_y, 100)
+        let (local exp_y) = exp(abs_y)
+        assert_in_range(x, exp_y - ERROR_DIV, exp_y + ERROR_DIV)
+        return (abs_y)
     end
 end
 
 # Returns y, the floored square root of x.
+# TODO: Remove this and use Cairo's built-in sqrt library once v0.7.0 is out.
 func sqrt{range_check_ptr}(x) -> (y):
     alloc_locals
 
