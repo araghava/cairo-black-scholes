@@ -65,9 +65,9 @@ cairo-compile black_scholes.cairo --output black_scholes_compiled.json && \
     --layout=small --program_input=input.json
 ```
 
-The output returns the call option price of $58.82 (divide it by 10^27).
-For put option price and greek values, please modify 'main' in
-black_scholes.cairo accordingly.
+The output returns the call option price of $58.82 (divide below by 10^27).
+For displaying the other values (put option price and greeks), please modify
+'main' in black_scholes.cairo accordingly.
 ```
 Program output:
   58819767434065242445077191149

@@ -50,7 +50,7 @@ async def test_randomized_black_scholes_options_prices():
     )
 
     # Number of random tests to run.
-    ITERATIONS = 10
+    ITERATIONS = 100
 
     # List of float tuple (t_annualised, volatility, spot, strike, rate).
     test_inputs = []
