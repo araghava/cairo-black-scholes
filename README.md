@@ -1,6 +1,7 @@
 # Cairo Black-Scholes Library
 
-Black-Scholes library implemented as a Cairo smart contract.
+Black-Scholes library implemented as a Cairo smart contract
+(```black_scholes_contract.cairo```).
 
 All inputs, outputs, and internal calculations use 27-digit fixed-point numbers.
 
