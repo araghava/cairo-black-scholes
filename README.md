@@ -55,7 +55,7 @@ one](https://goodcalculators.com/black-scholes-calculator/).
 1. First make sure you can run a basic StarkNet contract unit test (see
    [here](https://www.cairo-lang.org/docs/hello_starknet/unit_tests.html)).
 2. Install py\_vollib: ```pip install py_vollib```.
-3. Make sure you're using Cairo v0.7.0.
+3. Make sure you're using Cairo v0.7.0 or later.
 4. Clone this repo and run ```pytest --capture=no black_scholes_test.py```.
 
 ### Sample Test Output
