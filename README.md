@@ -18,13 +18,13 @@ spot price = $300
 strike price = $250
 interest rate = 3%
 
-**Option price calculation**:
+Option price calculation:
 starknet call --address 0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2 --abi black_scholes_contract_abi.json  --function option_prices --inputs 1000000000000000000000000000 150000000000000000000000000 300000000000000000000000000000 250000000000000000000000000000 30000000000000000000000000
 
 Results are (call price = $58.82, put price = $1.43):
 0xbe0e94e51c07cf860555e499 0x49fd4a0ba906f19c624670b
 
-**Delta calculation**:
+Delta calculation:
 starknet call --address 0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2 --abi black_scholes_contract_abi.json  --function delta --inputs 1000000000000000000000000000 150000000000000000000000000 300000000000000000000000000000 250000000000000000000000000000 30000000000000000000000000
 
 Results are (call delta = 0.932, put delta = -0.068):
