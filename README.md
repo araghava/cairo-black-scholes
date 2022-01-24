@@ -7,7 +7,7 @@ testnet is: ```0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae
 No un-whitelisted hints were used; functions like ```ln``` and ```exp``` are
 implemented with numerical approximations in native Cairo.
 
-All inputs, outputs, and internal calculations use 27-digit fixed-point numbers.
+All inputs, outputs, and internal calculations use **27-digit fixed-point numbers**.
 
 Example usage of contract:
 ```
@@ -57,7 +57,8 @@ one](https://goodcalculators.com/black-scholes-calculator/).
 1. First make sure you can run a basic StarkNet contract unit test (see
    [here](https://www.cairo-lang.org/docs/hello_starknet/unit_tests.html)).
 2. Install py\_vollib: ```pip install py_vollib```.
-3. Clone this repo and run ```pytest --capture=no black_scholes_test.py```.
+3. Make sure you're using Cairo v0.7.0.
+4. Clone this repo and run ```pytest --capture=no black_scholes_test.py```.
 
 ### Sample Test Output
 
