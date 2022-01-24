@@ -2,7 +2,7 @@
 
 Black-Scholes library implemented as a Cairo smart contract
 (```black_scholes_contract.cairo```). The address of the contract on the goerli
-testnet is: ```0x044a7311f4dec0bd09ae59e2fc5d8ab6967cc32bd1e4dd3b4538f1d65450a36e```. See on voyager [here](https://goerli.voyager.online/contract/0x044a7311f4dec0bd09ae59e2fc5d8ab6967cc32bd1e4dd3b4538f1d65450a36e#readContract))
+testnet is: ```0x044a7311f4dec0bd09ae59e2fc5d8ab6967cc32bd1e4dd3b4538f1d65450a36e```. See on voyager [here](https://goerli.voyager.online/contract/0x044a7311f4dec0bd09ae59e2fc5d8ab6967cc32bd1e4dd3b4538f1d65450a36e#readContract).
 
 No un-whitelisted hints were used; functions like ```ln``` and ```exp``` are
 implemented with numerical approximations in native Cairo. All inputs, outputs, and internal calculations use **27-digit fixed-point numbers**.
