@@ -5,9 +5,7 @@ Black-Scholes library implemented as a Cairo smart contract
 testnet is: ```0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2```.
 
 No un-whitelisted hints were used; functions like ```ln``` and ```exp``` are
-implemented with numerical approximations in native Cairo.
-
-All inputs, outputs, and internal calculations use **27-digit fixed-point numbers**.
+implemented with numerical approximations in native Cairo. All inputs, outputs, and internal calculations use **27-digit fixed-point numbers**.
 
 Example usage of contract:
 ```
