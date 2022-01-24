@@ -1,0 +1,210 @@
+[
+    {
+        "inputs": [
+            {
+                "name": "t_annualised",
+                "type": "felt"
+            },
+            {
+                "name": "volatility",
+                "type": "felt"
+            },
+            {
+                "name": "spot",
+                "type": "felt"
+            },
+            {
+                "name": "strike",
+                "type": "felt"
+            },
+            {
+                "name": "rate",
+                "type": "felt"
+            }
+        ],
+        "name": "delta",
+        "outputs": [
+            {
+                "name": "call_delta",
+                "type": "felt"
+            },
+            {
+                "name": "put_delta",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "t_annualised",
+                "type": "felt"
+            },
+            {
+                "name": "volatility",
+                "type": "felt"
+            },
+            {
+                "name": "spot",
+                "type": "felt"
+            },
+            {
+                "name": "strike",
+                "type": "felt"
+            },
+            {
+                "name": "rate",
+                "type": "felt"
+            }
+        ],
+        "name": "gamma",
+        "outputs": [
+            {
+                "name": "gamma",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "t_annualised",
+                "type": "felt"
+            },
+            {
+                "name": "volatility",
+                "type": "felt"
+            },
+            {
+                "name": "spot",
+                "type": "felt"
+            },
+            {
+                "name": "strike",
+                "type": "felt"
+            },
+            {
+                "name": "rate",
+                "type": "felt"
+            }
+        ],
+        "name": "vega",
+        "outputs": [
+            {
+                "name": "vega",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "t_annualised",
+                "type": "felt"
+            },
+            {
+                "name": "volatility",
+                "type": "felt"
+            },
+            {
+                "name": "spot",
+                "type": "felt"
+            },
+            {
+                "name": "strike",
+                "type": "felt"
+            },
+            {
+                "name": "rate",
+                "type": "felt"
+            }
+        ],
+        "name": "rho",
+        "outputs": [
+            {
+                "name": "call_rho",
+                "type": "felt"
+            },
+            {
+                "name": "put_rho",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "t_annualised",
+                "type": "felt"
+            },
+            {
+                "name": "volatility",
+                "type": "felt"
+            },
+            {
+                "name": "spot",
+                "type": "felt"
+            },
+            {
+                "name": "strike",
+                "type": "felt"
+            },
+            {
+                "name": "rate",
+                "type": "felt"
+            }
+        ],
+        "name": "theta",
+        "outputs": [
+            {
+                "name": "call_theta",
+                "type": "felt"
+            },
+            {
+                "name": "put_theta",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "t_annualised",
+                "type": "felt"
+            },
+            {
+                "name": "volatility",
+                "type": "felt"
+            },
+            {
+                "name": "spot",
+                "type": "felt"
+            },
+            {
+                "name": "strike",
+                "type": "felt"
+            },
+            {
+                "name": "rate",
+                "type": "felt"
+            }
+        ],
+        "name": "option_prices",
+        "outputs": [
+            {
+                "name": "call_price",
+                "type": "felt"
+            },
+            {
+                "name": "put_price",
+                "type": "felt"
+            }
+        ],
+        "type": "function"
+    }
+]

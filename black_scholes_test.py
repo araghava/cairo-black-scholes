@@ -18,9 +18,9 @@ UNIT = 1e27
 def get_precise(value):
     return int(UNIT * value)
 
-# Checks accuracy of the option price (within $0.001).
+# Checks accuracy of the option price (within $0.01).
 def check_price(got, expected):
-  assert(abs(got - expected) < 0.001)
+  assert(abs(got - expected) < 0.01)
 
 # Returns a random tuple of (t_annualised, volatility, spot, strike, rate)
 def get_random_test_input():

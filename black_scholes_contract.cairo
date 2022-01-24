@@ -2,8 +2,9 @@
 
 %builtins range_check
 
-from starkware.cairo.common.math import abs_value, assert_nn, assert_le, unsigned_div_rem, signed_div_rem, assert_in_range
+from starkware.cairo.common.math import abs_value, assert_nn, assert_le, unsigned_div_rem, signed_div_rem, assert_in_range, sqrt
 from starkware.cairo.common.math_cmp import is_le, is_in_range
+from starkware.cairo.common.pow import pow
 from starkware.cairo.common.serialize import serialize_word
 
 # This library uses fixed-point arithmetic with 27-digit precision for accurate
@@ -25,25 +26,6 @@ const MAX_CDF_INPUT = 5 * UNIT
 const MIN_T_ANNUALISED = 31709791983764586496
 const MIN_VOLATILITY = UNIT / 10000
 const DIV_BOUND = (2 ** 128) / 2
-
-# Returns y, the floored square root of x.
-# TODO: Remove this and use Cairo's built-in sqrt library once v0.7.0 is out.
-func sqrt{range_check_ptr}(x) -> (y):
-    alloc_locals
-
-    local y
-    %{
-        import math
-        ids.y = math.isqrt(ids.x)
-    %}
-
-    # Verify hint.
-    assert_nn(y)
-    tempvar y_plus_one = y + 1
-    assert_in_range(x, y * y, y_plus_one * y_plus_one)
-
-    return (y)
-end
 
 # Returns y, the exponent of x.
 # Uses first 50 terms of taylor series expansion centered at 0.
@@ -113,9 +95,20 @@ func exp{range_check_ptr}(x) -> (y):
     return (y=sum)
 end
 
+# Used for below ln function approximation.
+func msb{range_check_ptr}(x) -> (y):
+    let (res) = is_le(x, UNIT)
+    if res == 1:
+        return (y=0)
+    end
+    let (div, _) = unsigned_div_rem(x, 2)
+    let (rest) = msb(div)
+    let ans = 1 + rest
+    return (y=ans)
+end
+
 # Returns y, the natural logarithm of x.
-# TODO: Consider implementing this fully in Cairo by using binary search with
-# the above exp function.
+# Uses numerical approximation (Remez algorithm).
 func ln{range_check_ptr}(x) -> (y):
     alloc_locals
 
@@ -123,33 +116,32 @@ func ln{range_check_ptr}(x) -> (y):
         return (y=0)
     end
 
-    # Python hint computes absolute value of result and the sign.
-    local abs_y
-    local is_negative
-    %{
-        import math
-        value = math.floor(ids.UNIT * math.log(1.0 * ids.x / ids.UNIT))
-
-        ids.is_negative = value < 0
-        ids.abs_y = value if not ids.is_negative else (PRIME - value)
-    %}
-
-    # Verify hint computed correct sign.
-    let (local res) = is_le(x, UNIT - 1)
-    assert res = is_negative
-
-    # Verify hint computed correct ln value to a certain degree of accuracy
-    # using the above exp approximation.
-    const ERROR_DIV = UNIT / 10**6
-    if res == 1:
-        let (local exp_y) = exp(-abs_y)
-        assert_in_range(x, exp_y - ERROR_DIV, exp_y + ERROR_DIV)
-        return (-abs_y)
-    else:
-        let (local exp_y) = exp(abs_y)
-        assert_in_range(x, exp_y - ERROR_DIV, exp_y + ERROR_DIV)
-        return (abs_y)
+    let (is_frac) = is_le(x, UNIT - 1)
+    if is_frac == 1:
+        # ln(1/x) = -ln(x)
+        let (div, _) = unsigned_div_rem(UNIT * UNIT, x)
+        let (rec) = ln(div)
+        return (y=-rec)
     end
+
+    let (x_over_two, _) = unsigned_div_rem(x, 2)
+    let (local b) = msb(x_over_two)
+    let (divisor) = pow(2, b)
+    let (norm, _) = unsigned_div_rem(x, divisor)
+
+    const b1 = -56570851000000000000000000
+    const b2 = 447179550000000000000000000
+    const b3 = -1469956800000000000000000000
+    const b4 = 2821202600000000000000000000
+    const b5 = -1741793900000000000000000000
+
+    let (d1, _) = signed_div_rem(b1 * norm, UNIT, DIV_BOUND)
+    let (d2, _) = signed_div_rem((b2 + d1) * norm, UNIT, DIV_BOUND)
+    let (d3, _) = signed_div_rem((b3 + d2) * norm, UNIT, DIV_BOUND)
+    let (d4, _) = signed_div_rem((b4 + d3) * norm, UNIT, DIV_BOUND)
+    let d5 = d4 + b5
+    let res = d5 + b * 693147180559945309417232121
+    return (y=res)
 end
 
 # Returns y, standard normal distribution at x.

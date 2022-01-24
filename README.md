@@ -1,9 +1,35 @@
 # Cairo Black-Scholes Library
 
 Black-Scholes library implemented as a Cairo smart contract
-(```black_scholes_contract.cairo```).
+(```black_scholes_contract.cairo```). The address of the contract on the goerli
+testnet is: ```0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2```.
+
+No un-whitelisted hints were used; functions like ```ln``` and ```exp``` are
+implemented with numerical approximations in native Cairo.
 
 All inputs, outputs, and internal calculations use 27-digit fixed-point numbers.
+
+Example usage of contract:
+```
+Inputs are:
+t_annualised = 1 year
+volatility = 15%
+spot price = $300
+strike price = $250
+interest rate = 3%
+
+**Option price calculation**:
+starknet call --address 0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2 --abi black_scholes_contract_abi.json  --function option_prices --inputs 1000000000000000000000000000 150000000000000000000000000 300000000000000000000000000000 250000000000000000000000000000 30000000000000000000000000
+
+Results are (call price = $58.82, put price = $1.43):
+0xbe0e94e51c07cf860555e499 0x49fd4a0ba906f19c624670b
+
+**Delta calculation**:
+starknet call --address 0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2 --abi black_scholes_contract_abi.json  --function delta --inputs 1000000000000000000000000000 150000000000000000000000000 300000000000000000000000000000 250000000000000000000000000000 30000000000000000000000000
+
+Results are (call delta = 0.932, put delta = -0.068):
+0x302e63a1bd2e76d922c0000 -0x38480283fd98cf55d40000
+```
 
 ## Library
 
@@ -38,51 +64,37 @@ one](https://goodcalculators.com/black-scholes-calculator/).
 Example output from running the pytest:
 ```
 Input 0:
-t_annualised: 1.80990 years
-volatility: 13.38042%
-spot price: $175.83945
-strike price: $210.77366
-interest rate: 26.10447%
+t_annualised: 2.26664 years
+volatility: 10.56165%
+spot price: $326.08126
+strike price: $321.88154
+interest rate: 32.53044%
 
 Result 0:
-Computed call price: $45.03733, Expected call price: $45.03732
-Computed put price: $0.60770, Expected put price: $0.60769
+Computed call price: $172.09933, Expected call price: $172.09932
+Computed put price: $0.00001, Expected put price: $0.00001
 
 Input 1:
-t_annualised: 2.42301 years
-volatility: 4.32787%
-spot price: $788.69543
-strike price: $209.41947
-interest rate: 38.54290%
+t_annualised: 4.92524 years
+volatility: 28.79982%
+spot price: $747.82545
+strike price: $885.09734
+interest rate: 4.57839%
 
 Result 1:
-Computed call price: $706.38983, Expected call price: $706.38983
-Computed put price: $0.00000, Expected put price: $0.00000
+Computed call price: $203.70129, Expected call price: $203.70106
+Computed put price: $162.28934, Expected put price: $162.28911
 
 Input 2:
-t_annualised: 1.22038 years
-volatility: 32.02755%
-spot price: $366.68875
-strike price: $513.10870
-interest rate: 28.01244%
+t_annualised: 4.15624 years
+volatility: 41.86169%
+spot price: $144.70197
+strike price: $407.66489
+interest rate: 17.34711%
 
 Result 2:
-Computed call price: $52.42110, Expected call price: $52.42097
-Computed put price: $50.27003, Expected put price: $50.26990
+Computed call price: $33.43700, Expected call price: $33.43693
+Computed put price: $86.97104, Expected put price: $86.97096
 
 ...
 ```
-
-## SHARP
-
-In the sharp/ folder, you can generate a proof of call option price computation
-for a given input (```input.json```) using the Shared Prover (SHARP) and check
-that the proof gets verified on-chain by running:
-
-```cairo-sharp submit --source black_scholes.cairo --program_input input.json```
-
-```cairo-sharp status {JOB_KEY}```
-
-When the status is "PROCESSED", you can check to see if it is verified on chain.
-
-```cairo-sharp is_verified {FACT} --node_url https://goerli-light.eth.linkpool.io/```
