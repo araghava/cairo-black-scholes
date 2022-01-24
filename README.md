@@ -2,7 +2,7 @@
 
 Black-Scholes library implemented as a Cairo smart contract
 (```black_scholes_contract.cairo```). The address of the contract on the goerli
-testnet is: ```0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2```.
+testnet is: ```0x044a7311f4dec0bd09ae59e2fc5d8ab6967cc32bd1e4dd3b4538f1d65450a36e```. See on voyager [here](https://goerli.voyager.online/contract/0x044a7311f4dec0bd09ae59e2fc5d8ab6967cc32bd1e4dd3b4538f1d65450a36e#readContract))
 
 No un-whitelisted hints were used; functions like ```ln``` and ```exp``` are
 implemented with numerical approximations in native Cairo. All inputs, outputs, and internal calculations use **27-digit fixed-point numbers**.
@@ -10,20 +10,20 @@ implemented with numerical approximations in native Cairo. All inputs, outputs, 
 Example usage of contract:
 ```
 Inputs are:
-t_annualised = 1 year
-volatility = 15%
-spot price = $300
-strike price = $250
-interest rate = 3%
+t_annualised = 1000000000000000000000000000 (1 year)
+volatility = 150000000000000000000000000 (15%)
+spot price = 300000000000000000000000000000 ($300)
+strike price = 250000000000000000000000000000 ($250)
+interest rate = 30000000000000000000000000 (3%)
 
 Option price calculation:
-starknet call --address 0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2 --abi black_scholes_contract_abi.json  --function option_prices --inputs 1000000000000000000000000000 150000000000000000000000000 300000000000000000000000000000 250000000000000000000000000000 30000000000000000000000000
+starknet call --address 0x044a7311f4dec0bd09ae59e2fc5d8ab6967cc32bd1e4dd3b4538f1d65450a36e --abi black_scholes_contract_abi.json  --function option_prices --inputs 1000000000000000000000000000 150000000000000000000000000 300000000000000000000000000000 250000000000000000000000000000 30000000000000000000000000
 
 Results are (call price = $58.82, put price = $1.43):
-0xbe0e94e51c07cf860555e499 0x49fd4a0ba906f19c624670b
+0xbe0e94e51c07da31bc68edb7 0x49fd4a0ba906e391f8e8589
 
 Delta calculation:
-starknet call --address 0x004747bafa97f4e2c1491df50540e5dda921ad4a229a3a8e7a75dbf860181ae2 --abi black_scholes_contract_abi.json  --function delta --inputs 1000000000000000000000000000 150000000000000000000000000 300000000000000000000000000000 250000000000000000000000000000 30000000000000000000000000
+starknet call --address 0x044a7311f4dec0bd09ae59e2fc5d8ab6967cc32bd1e4dd3b4538f1d65450a36e --abi black_scholes_contract_abi.json  --function delta --inputs 1000000000000000000000000000 150000000000000000000000000 300000000000000000000000000000 250000000000000000000000000000 30000000000000000000000000
 
 Results are (call delta = 0.932, put delta = -0.068):
 0x302e63a1bd2e76d922c0000 -0x38480283fd98cf55d40000
