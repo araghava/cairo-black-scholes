@@ -234,10 +234,31 @@ func d1d2{range_check_ptr}(
     return (d1, d2)
 end
 
+func sanitize_inputs{range_check_ptr}(
+    t_annualised, volatility, spot, strike, rate):
+    # 1 second to 100 years
+    assert_in_range(t_annualised, MIN_T_ANNUALISED, UNIT * 100)
+
+    # 0.0001% to 100000%
+    assert_in_range(volatility, MIN_VOLATILITY, UNIT * 100000)
+
+    # $0 to $1 billion
+    assert_in_range(spot, 0, UNIT * 10**9)
+
+    # $0 to $1 billion
+    assert_in_range(strike, 0, UNIT * 10**9)
+
+    # 0% to 100000%
+    assert_in_range(rate, 0, UNIT * 100000)
+    ret
+end
+
 # Returns the option's call and put delta value.
 @external
 func delta{range_check_ptr}(
     t_annualised, volatility, spot, strike, rate) -> (call_delta, put_delta):
+    sanitize_inputs(t_annualised, volatility, spot, strike, rate)
+
     let (d1, _) = d1d2(t_annualised, volatility, spot, strike, rate)
     let (call_delta) = std_normal_cdf(d1)
     let put_delta = call_delta - UNIT
@@ -249,6 +270,7 @@ end
 func gamma{range_check_ptr}(
     t_annualised, volatility, spot, strike, rate) -> (gamma):
     alloc_locals
+    sanitize_inputs(t_annualised, volatility, spot, strike, rate)
 
     let (d1, _) = d1d2(t_annualised, volatility, spot, strike, rate)
     let (local std_normal_d1) = std_normal(d1)
@@ -265,6 +287,7 @@ end
 func vega{range_check_ptr}(
     t_annualised, volatility, spot, strike, rate) -> (vega):
     alloc_locals
+    sanitize_inputs(t_annualised, volatility, spot, strike, rate)
 
     let (local sqrt_t) = sqrt(UNIT * t_annualised)
     let (d1, _) = d1d2(t_annualised, volatility, spot, strike, rate)
@@ -279,6 +302,7 @@ end
 func rho{range_check_ptr}(
     t_annualised, volatility, spot, strike, rate) -> (call_rho, put_rho):
     alloc_locals
+    sanitize_inputs(t_annualised, volatility, spot, strike, rate)
 
     let (local strike_t, _) = unsigned_div_rem(strike * t_annualised, UNIT)
     let (rt, _) = unsigned_div_rem(rate * t_annualised, UNIT)
@@ -299,6 +323,7 @@ end
 func theta{range_check_ptr}(
     t_annualised, volatility, spot, strike, rate) -> (call_theta, put_theta):
     alloc_locals
+    sanitize_inputs(t_annualised, volatility, spot, strike, rate)
 
     let (local d1, local d2) = d1d2(t_annualised, volatility, spot, strike, rate)
     let (local std_norm_d1) = std_normal(d1)
@@ -332,6 +357,7 @@ end
 func option_prices{range_check_ptr}(
     t_annualised, volatility, spot, strike, rate) -> (call_price, put_price):
     alloc_locals
+    sanitize_inputs(t_annualised, volatility, spot, strike, rate)
 
     let (ann_rate, _) = unsigned_div_rem(rate * t_annualised, UNIT)
     let (exponent_term) = exp(-ann_rate)
